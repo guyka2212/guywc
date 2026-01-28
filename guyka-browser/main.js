@@ -1,16 +1,21 @@
 const { app, BrowserWindow } = require('electron')
 const https = require('https')
+const path = require('path')
 
 let registry = {}
 
 function loadRegistry(cb) {
   https.get(
-    'https://raw.githubusercontent.com/USERNAME/guyka-registry/main/sites.json',
+    'https://raw.githubusercontent.com/guyka2212/guyka-registry/main/sites.json',
     res => {
       let data = ''
       res.on('data', d => data += d)
       res.on('end', () => {
-        registry = JSON.parse(data)
+        try {
+          registry = JSON.parse(data)
+        } catch {
+          registry = {}
+        }
         cb()
       })
     }
@@ -20,13 +25,30 @@ function loadRegistry(cb) {
 app.whenReady().then(() => {
   loadRegistry(() => {
     const win = new BrowserWindow({
-      width: 1200,
-      height: 800
+      width: 1000,
+      height: 700,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false
+      }
     })
 
-    win.loadURL('https://google.com')
+    win.loadFile('index.html')
 
     win.webContents.on('will-navigate', (e, url) => {
+      if (url.startsWith('guyka://search/')) {
+        e.preventDefault()
+        const q = decodeURIComponent(url.split('/').pop())
+
+        if (registry[q]) {
+          win.loadURL(registry[q])
+        } else {
+          win.loadURL(
+            'https://www.google.com/search?q=' + encodeURIComponent(q)
+          )
+        }
+      }
+
       if (url.startsWith('guyka://')) {
         e.preventDefault()
         const name = url.replace('guyka://', '')
