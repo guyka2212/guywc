@@ -2,45 +2,16 @@
 <html lang="he">
 <head>
   <meta charset="UTF-8">
-  <title>Guyka Browser</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: #111;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .box {
-      text-align: center;
-    }
-    input {
-      width: 300px;
-      padding: 10px;
-      font-size: 16px;
-    }
-    button {
-      padding: 10px;
-      margin: 5px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-  </style>
+  <title>Guyka</title>
 </head>
 <body>
-  <div class="box">
-    <h1>Guyka 🔍</h1>
-    <input id="q" placeholder="חפש אתר או מילה" />
-    <br>
-    <button onclick="searchGuyka()">חיפוש ב-Guyka</button>
-    <button onclick="searchGoogle()">חיפוש ב-Google</button>
-  </div>
+  <h1>Guyka Browser</h1>
+
+  <input id="q" placeholder="חפש..." />
+  <button onclick="searchGuyka()">חפש ב-Guyka</button>
+  <button onclick="searchGoogle()">חפש ב-Google</button>
 
   <script>
-    const { shell } = require('electron')
-
     function searchGuyka() {
       const q = document.getElementById('q').value
       location.href = 'guyka://search/' + encodeURIComponent(q)
@@ -48,9 +19,8 @@
 
     function searchGoogle() {
       const q = document.getElementById('q').value
-      shell.openExternal(
+      location.href =
         'https://www.google.com/search?q=' + encodeURIComponent(q)
-      )
     }
 
     document.getElementById('q').addEventListener('keydown', e => {

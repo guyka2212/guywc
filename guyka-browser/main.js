@@ -1,6 +1,5 @@
 const { app, BrowserWindow } = require('electron')
 const https = require('https')
-const path = require('path')
 
 let registry = {}
 
@@ -39,21 +38,10 @@ app.whenReady().then(() => {
       if (url.startsWith('guyka://search/')) {
         e.preventDefault()
         const q = decodeURIComponent(url.split('/').pop())
-
         if (registry[q]) {
           win.loadURL(registry[q])
         } else {
-          win.loadURL(
-            'https://www.google.com/search?q=' + encodeURIComponent(q)
-          )
-        }
-      }
-
-      if (url.startsWith('guyka://')) {
-        e.preventDefault()
-        const name = url.replace('guyka://', '')
-        if (registry[name]) {
-          win.loadURL(registry[name])
+          win.loadURL('https://www.google.com/search?q=' + encodeURIComponent(q))
         }
       }
     })
